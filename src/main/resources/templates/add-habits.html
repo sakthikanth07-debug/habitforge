@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f1">
+    <title>Add a habit | HabitForge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="/" aria-label="HabitForge dashboard"><span class="brand-mark" aria-hidden="true">H</span><span>habit<span class="brand-accent">forge</span></span></a>
+            <p class="nav-caption">WORKSPACE</p>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a class="nav-link" href="/"><span class="nav-icon" aria-hidden="true">⌂</span> Dashboard</a>
+                <a class="nav-link" href="/habits-page"><span class="nav-icon" aria-hidden="true">▦</span> My Habits</a>
+                <a class="nav-link is-active" href="/add-habits" aria-current="page"><span class="nav-icon" aria-hidden="true">＋</span> Add Habit</a>
+            </nav>
+            <div class="sidebar-note"><span class="sidebar-note-icon" aria-hidden="true">✳</span><p>Small steps, kept daily, become something remarkable.</p></div>
+            <div class="sidebar-footer"><span class="status-dot"></span> Your habit space</div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar"><p class="breadcrumbs">Workspace <span>/</span> Add habit</p><a class="topbar-add" href="/habits-page">View habits <span aria-hidden="true">→</span></a></header>
+            <section class="page-intro"><div><p class="eyebrow">MAKE ROOM FOR WHAT MATTERS</p><h1>A new ritual<span class="heading-period">.</span></h1><p class="welcome-copy">Choose a habit you can return to, even on an ordinary day.</p></div></section>
+            <div class="form-layout">
+                <section class="form-panel">
+                    <div class="form-panel-heading"><span class="form-step">01</span><div><h2>Set your intention</h2><p>Start simple. You can adjust your routine anytime.</p></div></div>
+                    <form id="habitForm" novalidate>
+                        <div class="field-group"><label for="name">Habit name <span class="required-mark">*</span></label><input id="name" name="name" type="text" maxlength="60" placeholder="For example, read before bed" required aria-describedby="nameError"><span class="field-error" id="nameError"></span></div>
+                        <div class="field-group"><label for="description">A little more detail <span class="optional-label">OPTIONAL</span></label><textarea id="description" name="description" maxlength="240" rows="3" placeholder="What does this look like for you?"></textarea><span class="field-hint">Keep it clear and personal.</span></div>
+                        <div class="field-group"><label for="frequency">How often? <span class="required-mark">*</span></label><select id="frequency" name="frequency" required aria-describedby="frequencyError"><option value="DAILY">Every day</option><option value="SPECIFIC_WEEKDAYS">Choose weekdays</option></select><span class="field-error" id="frequencyError"></span></div>
+                        <fieldset id="weekdaysContainer" class="weekday-field" hidden><legend>Which days? <span class="required-mark">*</span></legend><div class="weekday-grid">
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="MONDAY"><span>Mon</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="TUESDAY"><span>Tue</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="WEDNESDAY"><span>Wed</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="THURSDAY"><span>Thu</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="FRIDAY"><span>Fri</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="SATURDAY"><span>Sat</span></label>
+                            <label class="weekday-option"><input type="checkbox" name="weekdays" value="SUNDAY"><span>Sun</span></label>
+                        </div><span class="field-error" id="weekdaysError"></span></fieldset>
+                        <div class="field-group reminder-field"><label for="reminderTime">A gentle reminder <span class="optional-label">OPTIONAL</span></label><input id="reminderTime" name="reminderTime" type="time"><span class="field-hint">Pick a time that fits your day.</span></div>
+                        <div id="formMessage" class="form-message" role="status" aria-live="polite" hidden></div>
+                        <div class="form-actions"><a class="secondary-button" href="/habits-page">Cancel</a><button class="primary-button" id="submitButton" type="submit"><span class="button-label">Create habit</span><span class="button-spinner" aria-hidden="true"></span><span aria-hidden="true">→</span></button></div>
+                    </form>
+                </section>
+                <aside class="form-aside"><div class="aside-art" aria-hidden="true"><span class="art-sun"></span><span class="art-stem"></span><span class="art-leaf art-leaf-one"></span><span class="art-leaf art-leaf-two"></span><span class="art-ground"></span></div><p class="eyebrow">A KIND REMINDER</p><blockquote>Start where you are. Make the next promise small.</blockquote><span class="quote-author">A thought for today</span></aside>
+            </div>
+            <footer class="page-footer">Made for the person you're becoming.</footer>
+        </main>
+    </div>
+    <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/add-habit.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f1">
+    <title>Habit details | HabitForge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="/" aria-label="HabitForge dashboard"><span class="brand-mark" aria-hidden="true">H</span><span>habit<span class="brand-accent">forge</span></span></a>
+            <p class="nav-caption">WORKSPACE</p>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a class="nav-link" href="/"><span class="nav-icon" aria-hidden="true">⌂</span> Dashboard</a>
+                <a class="nav-link is-active" href="/habits-page" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span> My Habits</a>
+                <a class="nav-link" href="/add-habits"><span class="nav-icon" aria-hidden="true">＋</span> Add Habit</a>
+            </nav>
+            <div class="sidebar-note"><span class="sidebar-note-icon" aria-hidden="true">✳</span><p>Small steps, kept daily, become something remarkable.</p></div>
+            <div class="sidebar-footer"><span class="status-dot"></span> Your habit space</div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar"><p class="breadcrumbs"><a href="/habits-page">My Habits</a> <span>/</span> Details</p><a class="topbar-add" href="/habits-page"><span aria-hidden="true">←</span> All habits</a></header>
+            <section id="detailsLoading" class="loading-state detail-loading"><span class="spinner"></span> Loading habit details...</section>
+            <section id="detailsError" class="empty-state" hidden><span class="empty-illustration" aria-hidden="true">?</span><h1>We couldn't find that habit.</h1><p id="detailsErrorMessage">Check the link and try again.</p><a class="primary-button" href="/habits-page">Back to my habits <span aria-hidden="true">→</span></a></section>
+            <div id="detailsContent" hidden>
+                <section class="detail-hero"><div><p class="eyebrow">YOUR PRACTICE</p><h1 id="detailName">Habit details<span class="heading-period">.</span></h1><p id="detailDescription" class="welcome-copy"></p><div class="detail-tags"><span id="detailFrequency" class="detail-tag"></span><span id="detailReminder" class="detail-tag"></span></div></div><button id="detailCompleteButton" class="primary-button complete-action" type="button" data-complete-id=""><span class="button-label">Mark complete</span><span class="button-spinner" aria-hidden="true"></span><span aria-hidden="true">✓</span></button></section>
+                <section class="stats-grid detail-stats" aria-label="Habit streak statistics">
+                    <article class="stat-card"><div class="stat-top"><span>Current streak</span><span class="stat-icon stat-icon-green" aria-hidden="true">↗</span></div><strong id="currentStreak" class="stat-value">--</strong><span class="stat-foot">History not provided by API</span></article>
+                    <article class="stat-card"><div class="stat-top"><span>Best streak</span><span class="stat-icon stat-icon-yellow" aria-hidden="true">✳</span></div><strong id="bestStreak" class="stat-value">--</strong><span class="stat-foot">History not provided by API</span></article>
+                    <article class="stat-card"><div class="stat-top"><span>Today's status</span><span class="stat-icon stat-icon-coral" aria-hidden="true">✓</span></div><strong id="todayStatus" class="stat-value stat-status">Not completed</strong><span class="stat-foot">Confirmed completions in this session</span></article>
+                </section>
+                <div class="detail-columns">
+                    <section class="calendar-panel"><div class="section-heading"><div><p class="eyebrow">YOUR MONTH AT A GLANCE</p><h2 id="calendarMonth">Calendar</h2></div><div class="calendar-controls"><button id="previousMonth" class="icon-button" type="button" aria-label="Previous month">←</button><button id="nextMonth" class="icon-button" type="button" aria-label="Next month">→</button></div></div><div class="calendar-weekdays" aria-hidden="true"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div><div id="calendarGrid" class="calendar-grid" role="grid" aria-label="Habit completion calendar"></div><div class="calendar-legend"><span><i class="legend-dot legend-complete"></i>Completed</span><span><i class="legend-dot legend-required"></i>Required day</span><span><i class="legend-dot legend-unknown"></i>History unavailable</span><span><i class="legend-dot legend-today"></i>Today</span></div><p class="calendar-note">Completion history is not included in the current API response. Past required days are shown as unknown, not missed.</p></section>
+                    <aside class="history-panel"><div class="section-heading compact-heading"><div><p class="eyebrow">A RECORD OF SHOWING UP</p><h2>Completion history</h2></div></div><p class="history-api-note">Only completions confirmed in this browser session are listed here.</p><div id="completionHistory" class="history-list"></div></aside>
+                </div>
+            </div>
+            <footer class="page-footer">Made for the person you're becoming.</footer>
+        </main>
+    </div>
+    <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/habit-details.js"></script>
+</body>
+</html>

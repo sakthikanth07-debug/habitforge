@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f1">
+    <title>My Habits | HabitForge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="/" aria-label="HabitForge dashboard"><span class="brand-mark" aria-hidden="true">H</span><span>habit<span class="brand-accent">forge</span></span></a>
+            <p class="nav-caption">WORKSPACE</p>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a class="nav-link" href="/"><span class="nav-icon" aria-hidden="true">⌂</span> Dashboard</a>
+                <a class="nav-link is-active" href="/habits-page" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span> My Habits</a>
+                <a class="nav-link" href="/add-habits"><span class="nav-icon" aria-hidden="true">＋</span> Add Habit</a>
+            </nav>
+            <div class="sidebar-note"><span class="sidebar-note-icon" aria-hidden="true">✳</span><p>Small steps, kept daily, become something remarkable.</p></div>
+            <div class="sidebar-footer"><span class="status-dot"></span> Your habit space</div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar"><p class="breadcrumbs">Workspace <span>/</span> My Habits</p><a class="topbar-add" href="/add-habits"><span aria-hidden="true">＋</span> New habit</a></header>
+            <section class="page-intro"><div><p class="eyebrow">YOUR ROUTINES, YOUR PACE</p><h1>My habits<span class="heading-period">.</span></h1><p class="welcome-copy">A clear view of the small things you're showing up for.</p></div><a class="primary-button" href="/add-habits"><span aria-hidden="true">＋</span> Add a habit</a></section>
+            <section class="filter-bar" aria-label="Habit filters">
+                <label class="search-field"><span class="search-icon" aria-hidden="true">⌕</span><span class="visually-hidden">Search habits</span><input id="habitSearch" type="search" placeholder="Search your habits..." autocomplete="off"></label>
+                <label class="select-filter"><span class="visually-hidden">Filter by frequency</span><select id="frequencyFilter"><option value="ALL">All frequencies</option><option value="DAILY">Daily</option><option value="SPECIFIC_WEEKDAYS">Specific weekdays</option></select></label>
+                <label class="select-filter"><span class="visually-hidden">Filter by completion status</span><select id="statusFilter"><option value="ALL">Any status</option><option value="COMPLETED">Completed today</option><option value="PENDING">Not completed</option></select></label>
+            </section>
+            <p id="resultsSummary" class="results-summary" aria-live="polite"></p>
+            <section id="habitsContainer" class="habits-grid" aria-label="Your habits"><div class="loading-state"><span class="spinner"></span> Loading your habits...</div></section>
+            <section id="emptyState" class="empty-state" hidden><span class="empty-illustration" aria-hidden="true">✳</span><h2 id="emptyTitle">No habits yet</h2><p id="emptyDescription">Start with one small promise to yourself.</p><a class="primary-button" href="/add-habits"><span aria-hidden="true">＋</span> Create your first habit</a></section>
+            <footer class="page-footer">Made for the person you're becoming.</footer>
+        </main>
+    </div>
+    <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/habits.js"></script>
+</body>
+</html>

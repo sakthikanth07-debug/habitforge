@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f1">
+    <title>Create account | HabitForge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-body">
+    <main class="auth-layout">
+        <section class="auth-story signup-story" aria-label="HabitForge">
+            <a class="brand auth-brand" href="/" aria-label="HabitForge home"><span class="brand-mark" aria-hidden="true">H</span><span>habit<span class="brand-accent">forge</span></span></a>
+            <div class="story-copy"><p class="eyebrow">BEGIN WITH ONE THING</p><h1>Make a little<br>space for better<span class="heading-period">.</span></h1><p>Build a rhythm that fits your life. One repeatable choice at a time.</p></div>
+            <div class="story-stamp" aria-hidden="true"><span>✳</span><span>START<br>SMALL</span></div>
+            <div class="story-footer"><span class="story-line"></span> Your pace, your practice</div>
+        </section>
+        <section class="auth-main">
+            <a class="auth-home-link" href="/">← Back to dashboard</a>
+            <div class="auth-form-wrap signup-form-wrap">
+                <p class="eyebrow">A FRESH START</p>
+                <h2>Create your account.</h2>
+                <p class="auth-subtitle">Set up your space for the habits you want to keep.</p>
+                <form class="auth-form" data-auth-form novalidate>
+                    <div class="field-group"><label for="signupName">Your name</label><input id="signupName" name="name" type="text" placeholder="What should we call you?" autocomplete="name" maxlength="80" required></div>
+                    <div class="field-group"><label for="signupEmail">Email address</label><input id="signupEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required></div>
+                    <div class="field-group"><label for="signupPassword">Create a password</label><div class="password-control"><input id="signupPassword" name="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="signupPassword" aria-label="Show password">Show</button></div><span class="field-hint">Use at least 8 characters.</span></div>
+                    <div class="field-group"><label for="confirmPassword">Confirm password</label><div class="password-control"><input id="confirmPassword" name="confirmPassword" type="password" placeholder="Enter your password again" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="confirmPassword" aria-label="Show password">Show</button></div></div>
+                    <p class="auth-notice" role="status">Account creation isn't connected yet. Form entries are not sent or stored.</p>
+                    <button class="primary-button auth-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+                    <p class="auth-feedback" role="alert" aria-live="polite" hidden></p>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+            </div>
+            <footer class="auth-footer">Made for the person you're becoming.</footer>
+        </section>
+    </main>
+    <script src="/js/auth.js"></script>
+</body>
+</html>
