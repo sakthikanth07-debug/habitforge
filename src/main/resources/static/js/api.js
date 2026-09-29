@@ -7,6 +7,7 @@ async function apiRequest(path, options = {}) {
     try {
         response = await fetch(`${API_BASE_URL}${path}`, {
             ...options,
+            credentials: "include",
             headers: {
                 Accept: "application/json",
                 ...(options.body
@@ -41,6 +42,7 @@ async function apiRequest(path, options = {}) {
                 : data?.message || data?.detail || data?.error;
 
         const fallbackMessages = {
+            401: "Please sign in to continue.",
             400: "Please check the information and try again.",
             404: "That habit could not be found.",
             409: "This habit is already marked complete.",
@@ -57,14 +59,34 @@ async function apiRequest(path, options = {}) {
     return data;
 }
 
-function getHabits() {
-    return apiRequest("/habits");
+function getHabits(search = "", frequency = "", page = 0, size = 10, sort = "") {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (frequency) params.append("frequency", frequency);
+    params.append("page", page);
+    params.append("size", size);
+    if (sort) params.append("sort", sort);
+    
+    return apiRequest(`/habits?${params.toString()}`);
 }
 
 function createHabit(habit) {
     return apiRequest("/habits", {
         method: "POST",
         body: JSON.stringify(habit)
+    });
+}
+
+function updateHabit(id, habit) {
+    return apiRequest(`/habits/${Number(id)}`, {
+        method: "PUT",
+        body: JSON.stringify(habit)
+    });
+}
+
+function deleteHabit(id) {
+    return apiRequest(`/habits/${Number(id)}`, {
+        method: "DELETE"
     });
 }
 
@@ -105,13 +127,25 @@ function getStreak(habitId) {
     });
 }
 
+function getDashboard() {
+    return apiRequest("/habits/dashboard");
+}
+
+function getReminders() {
+    return apiRequest("/reminders");
+}
+
 window.API_BASE_URL = API_BASE_URL;
 
 window.HabitForgeApi = Object.freeze({
     getHabits,
     createHabit,
+    updateHabit,
+    deleteHabit,
     getHabit,
     completeHabit,
     getCalendar,
-    getStreak
+    getStreak,
+    getDashboard,
+    getReminders
 });

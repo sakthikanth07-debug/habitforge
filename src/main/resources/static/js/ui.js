@@ -1,6 +1,7 @@
 (function () {
     const weekdays = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
     let memoryRecords = [];
+    const notifiedReminderIds = new Set();
     const dayNames = {
         MONDAY: "Monday",
         TUESDAY: "Tuesday",
@@ -97,6 +98,19 @@
         window.setTimeout(() => toast.remove(), 4200);
     }
 
+    function notifyReminders(reminders) {
+        reminders.forEach(reminder => {
+            const reminderId = String(reminder.id);
+            if (notifiedReminderIds.has(reminderId)) return;
+            notifiedReminderIds.add(reminderId);
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("HabitForge reminder", { body: reminder.message });
+            }
+            showToast(reminder.message, "error");
+        });
+    }
+
     function bindCompletionActions(container, habits, onSuccess) {
         const pendingIds = new Set();
 
@@ -158,6 +172,23 @@
         </article>`;
     }
 
+    function reminderHabit(reminder) {
+        return {
+            id: reminder.habitId,
+            name: reminder.habitName,
+            frequency: reminder.frequency,
+            weekdays: reminder.weekdays
+        };
+    }
+
+    function renderReminderCards(reminders) {
+        return reminders.map(reminder => `<article class="reminder-item" data-reminder-id="${escapeHTML(reminder.id)}">
+            <span class="reminder-mark" aria-hidden="true">!</span>
+            <div class="reminder-copy"><strong>${escapeHTML(reminder.habitName)}</strong><span>${escapeHTML(reminder.message)}</span></div>
+            <button class="complete-action reminder-action" type="button" data-complete-id="${escapeHTML(reminder.habitId)}"><span class="button-label">Mark complete</span><span class="button-spinner" aria-hidden="true"></span><span aria-hidden="true">✓</span></button>
+        </article>`).join("");
+    }
+
     window.HabitForgeUI = Object.freeze({
         todayISO,
         getTodayCompletions,
@@ -169,7 +200,10 @@
         isScheduledToday,
         setButtonComplete,
         showToast,
+        notifyReminders,
         bindCompletionActions,
-        renderHabitCard
+        renderHabitCard,
+        reminderHabit,
+        renderReminderCards
     });
 })();

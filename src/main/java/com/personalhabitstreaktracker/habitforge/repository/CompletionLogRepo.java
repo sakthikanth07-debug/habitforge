@@ -8,12 +8,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface CompletionLogRepo extends JpaRepository<CompletionLog, Long> {
 
     List<CompletionLog> findByHabitOrderByCompletionDateAsc(Habit habit);
 
-    Optional<CompletionLog> findByHabitAndCompletionDate(
+    List<CompletionLog> findByHabitAndCompletionDate(
             Habit habit,
             LocalDate completionDate
     );
+
+    void deleteByHabit(Habit habit);
+
+    List<CompletionLog> findTop10ByOrderByIdDesc();
 }

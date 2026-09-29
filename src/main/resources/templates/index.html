@@ -68,6 +68,7 @@
                     <div id="dashboardHabits" class="habit-list"><div class="loading-state"><span class="spinner"></span> Loading your habits...</div></div>
                 </section>
                 <aside class="right-rail">
+                    <section class="rail-section" aria-labelledby="dashboardRemindersHeading"><div class="section-heading compact-heading"><div><p class="eyebrow">DON'T LET IT SLIP</p><h2 id="dashboardRemindersHeading">Reminders</h2></div><button class="text-button" type="button" data-enable-push>Enable desktop reminders</button></div><div id="dashboardReminders" class="reminders-list"><p class="muted-copy">No pending reminders.</p></div></section>
                     <section class="rail-section" aria-labelledby="activityHeading"><div class="section-heading compact-heading"><div><p class="eyebrow">THE LITTLE WINS</p><h2 id="activityHeading">Recent activity</h2></div></div><div id="recentActivity" class="activity-list"><p class="muted-copy">Your completed habits will show up here.</p></div></section>
                     <section class="quote-panel"><span class="quote-mark" aria-hidden="true">“</span><p class="eyebrow">A NOTE TO YOURSELF</p><blockquote>You don't need a perfect day. Just one small promise kept.</blockquote><span class="quote-author">A practice in patience</span></section>
                 </aside>
@@ -77,6 +78,7 @@
     </div>
     <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
     <script src="/js/api.js"></script>
+    <script src="/js/push.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>

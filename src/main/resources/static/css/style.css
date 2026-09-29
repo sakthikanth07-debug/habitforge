@@ -161,6 +161,16 @@ h1 { margin: 0; font-size: 31px; font-weight: 700; line-height: 1.2; }
 .search-field input::placeholder { color: #a1a9a3; }
 .select-filter select { min-width: 145px; height: 39px; padding: 0 30px 0 10px; border: 1px solid #e5e9e5; border-radius: 5px; color: #59655e; background-color: #fff; font-size: 11px; }
 .results-summary { margin: 16px 0 10px; color: #8b958e; font-size: 11px; }
+.reminders-panel { margin-top: 16px; padding: 16px; border: 1px solid #f0d8cc; border-radius: 7px; background: #fffaf7; }
+.reminders-panel .section-heading { margin-bottom: 10px; }
+.reminders-list { display: grid; gap: 9px; }
+.reminder-item { display: flex; align-items: center; gap: 10px; padding: 10px 11px; border: 1px solid #f1e2da; border-radius: 6px; background: #fff; }
+.reminder-mark { display: grid; width: 27px; height: 27px; flex: 0 0 27px; place-items: center; border-radius: 50%; color: #a95e49; background: var(--coral-soft); font-weight: 800; }
+.reminder-copy { min-width: 0; flex: 1; }
+.reminder-copy strong, .reminder-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reminder-copy strong { font-family: Manrope, sans-serif; font-size: 11px; }
+.reminder-copy span { margin-top: 2px; color: #8b756c; font-size: 10px; }
+.reminder-action { flex: 0 0 auto; min-height: 32px; padding: 0 10px; }
 .habits-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
 .habits-grid .loading-state, .habits-grid .inline-error { grid-column: 1 / -1; }
 .habits-grid .habit-card { padding: 17px; }

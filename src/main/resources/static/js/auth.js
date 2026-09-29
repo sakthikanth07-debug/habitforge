@@ -32,8 +32,28 @@
         form.addEventListener("submit", event => {
             event.preventDefault();
             if (!form.reportValidity()) return;
-            feedback.textContent = "This form is ready, but account authentication has not been connected yet. Nothing was sent.";
+
+            const isSignup = Boolean(confirmation);
+            const payload = Object.fromEntries(new FormData(form).entries());
+            delete payload.confirmPassword;
+            feedback.textContent = "Connecting...";
             feedback.hidden = false;
+
+            fetch(isSignup ? "/api/auth/signup" : "/api/auth/login", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(async response => {
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.message || "We could not authenticate your account.");
+                    window.location.assign("/habits-page");
+                })
+                .catch(error => {
+                    feedback.textContent = error.message;
+                    feedback.hidden = false;
+                });
         });
     });
 })();

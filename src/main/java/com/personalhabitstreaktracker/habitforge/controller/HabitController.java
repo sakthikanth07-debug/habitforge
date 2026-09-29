@@ -2,7 +2,6 @@ package com.personalhabitstreaktracker.habitforge.controller;
 
 import com.personalhabitstreaktracker.habitforge.entity.CompletionLog;
 import com.personalhabitstreaktracker.habitforge.entity.Habit;
-import com.personalhabitstreaktracker.habitforge.entity.Streak;
 import com.personalhabitstreaktracker.habitforge.service.HabitService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -29,9 +28,23 @@ public class HabitController {
         return habitService.createHabit(habit);
     }
 
+    @PutMapping("/habits/{id}")
+    public Habit updateHabit(@PathVariable @Positive Long id, @Valid @RequestBody Habit habit) {
+        return habitService.updateHabit(id, habit);
+    }
+
+    @DeleteMapping("/habits/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteHabit(@PathVariable @Positive Long id) {
+        habitService.deleteHabit(id);
+    }
+
     @GetMapping("/habits")
-    public List<Habit> getAllHabits() {
-        return habitService.getAllHabits();
+    public org.springframework.data.domain.Page<Habit> getAllHabits(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) com.personalhabitstreaktracker.habitforge.entity.HabitFrequency frequency,
+            org.springframework.data.domain.Pageable pageable) {
+        return habitService.getHabits(search, frequency, pageable);
     }
 
     @PostMapping("/habits/get")
@@ -50,8 +63,14 @@ public class HabitController {
     }
 
     @PostMapping("/habits/streak")
-    public Streak getStreak(@RequestBody GetHabitRequest request) {
-        return habitService.getStreak(request.getId());
+    public java.util.Map<String, Object> getStreak(@RequestBody GetHabitRequest request) {
+        Habit habit = habitService.getHabitStreak(request.getId());
+        return java.util.Map.of(
+            "id", habit.getId(),
+            "name", habit.getName(),
+            "currentStreak", habit.getCurrentStreak(),
+            "bestStreak", habit.getBestStreak()
+        );
     }
 
     @PostMapping({"/habits/calendar", "/calendar"})

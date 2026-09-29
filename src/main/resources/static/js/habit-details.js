@@ -64,11 +64,11 @@
         grid.innerHTML = cells.join("");
     }
 
-    function renderHistory() {
+    function renderHistory(records) {
         const list = document.getElementById("completionHistory");
-        const records = window.HabitForgeUI.getTodayCompletions().filter(record => String(record.habitId) === String(habit.id)).reverse();
-        list.innerHTML = records.length
-            ? records.map(record => `<div class="history-item"><span class="history-check" aria-hidden="true">✓</span><div><strong>${window.HabitForgeUI.escapeHTML(record.date)}</strong><span>Completed at ${window.HabitForgeUI.escapeHTML(record.time)}</span></div></div>`).join("")
+        const recent = (records || []).slice().reverse();
+        list.innerHTML = recent.length
+            ? recent.map(record => `<div class="history-item"><span class="history-check" aria-hidden="true">✓</span><div><strong>${window.HabitForgeUI.escapeHTML(record.completionDate)}</strong><span>Completed</span></div></div>`).join("")
             : '<p class="history-empty">No completions confirmed in this session yet.</p>';
         document.getElementById("todayStatus").textContent = window.HabitForgeUI.hasCompletedToday(habit.id) ? "Completed" : "Not completed";
     }
@@ -93,13 +93,17 @@
             completeButton.querySelector(".button-label").textContent = "Not scheduled today";
         }
 
-        renderHistory();
-        renderCalendar();
-        loading.hidden = true;
-        content.hidden = false;
-        window.HabitForgeUI.bindCompletionActions(content, [habit], () => {
-            renderHistory();
+        window.HabitForgeApi.getCalendar(habit.id).then(logs => {
+            renderHistory(logs);
             renderCalendar();
+            loading.hidden = true;
+            content.hidden = false;
+            window.HabitForgeUI.bindCompletionActions(content, [habit], () => {
+                window.HabitForgeApi.getCalendar(habit.id).then(newLogs => {
+                    renderHistory(newLogs);
+                    renderCalendar();
+                });
+            });
         });
     }
 

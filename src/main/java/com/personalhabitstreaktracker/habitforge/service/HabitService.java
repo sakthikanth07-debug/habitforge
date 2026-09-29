@@ -3,17 +3,16 @@ package com.personalhabitstreaktracker.habitforge.service;
 import com.personalhabitstreaktracker.habitforge.entity.CompletionLog;
 import com.personalhabitstreaktracker.habitforge.entity.Habit;
 import com.personalhabitstreaktracker.habitforge.entity.HabitFrequency;
-import com.personalhabitstreaktracker.habitforge.entity.Streak;
 import com.personalhabitstreaktracker.habitforge.exception.HabitNotFoundException;
 import com.personalhabitstreaktracker.habitforge.repository.CompletionLogRepo;
 import com.personalhabitstreaktracker.habitforge.repository.HabitTrackerRepo;
-import com.personalhabitstreaktracker.habitforge.repository.StreakRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
@@ -25,20 +24,56 @@ public class HabitService {
 
     private final HabitTrackerRepo habitTrackerRepo;
     private final CompletionLogRepo completionLogRepo;
-    private final StreakRepo streakRepo;
+    private final HabitReminderService habitReminderService;
+    private final ZoneId zoneId;
 
     public HabitService(
             HabitTrackerRepo habitTrackerRepo,
             CompletionLogRepo completionLogRepo,
-            StreakRepo streakRepo) {
+            HabitReminderService habitReminderService,
+            ZoneId zoneId) {
 
         this.habitTrackerRepo = habitTrackerRepo;
         this.completionLogRepo = completionLogRepo;
-        this.streakRepo = streakRepo;
+        this.habitReminderService = habitReminderService;
+        this.zoneId = zoneId;
     }
 
     @Transactional
     public Habit createHabit(Habit habit) {
+
+        validateAndNormalize(habit);
+        habit.setCompletedToday(false);
+        habit.setCurrentStreak(0);
+        habit.setBestStreak(0);
+
+        return habitTrackerRepo.saveAndFlush(habit);
+    }
+
+    @Transactional
+    public Habit updateHabit(Long id, Habit changes) {
+        Habit existingHabit = getHabitById(id);
+        validateAndNormalize(changes);
+
+        existingHabit.setName(changes.getName());
+        existingHabit.setDescription(changes.getDescription());
+        existingHabit.setFrequency(changes.getFrequency());
+        existingHabit.setWeekdays(changes.getWeekdays());
+        existingHabit.setReminderTime(changes.getReminderTime());
+        habitReminderService.deleteReminders(existingHabit);
+
+        return habitTrackerRepo.saveAndFlush(existingHabit);
+    }
+
+    @Transactional
+    public void deleteHabit(Long id) {
+        Habit habit = getHabitById(id);
+        completionLogRepo.deleteByHabit(habit);
+        habitReminderService.deleteReminders(habit);
+        habitTrackerRepo.delete(habit);
+    }
+
+    private void validateAndNormalize(Habit habit) {
 
         if (habit.getName() == null || habit.getName().isBlank()) {
             throw new IllegalArgumentException(
@@ -65,20 +100,10 @@ public class HabitService {
 
         normalizeReminderTime(habit);
         habit.setName(habit.getName().trim());
-        habit.setCompletedToday(false);
-        habit.setCurrentStreak(0);
-        habit.setBestStreak(0);
-
-        Habit savedHabit = habitTrackerRepo.saveAndFlush(habit);
-
-        Streak streak = new Streak(savedHabit);
-        streakRepo.save(streak);
-
-        return savedHabit;
     }
 
-    public List<Habit> getAllHabits() {
-        return habitTrackerRepo.findAll();
+    public org.springframework.data.domain.Page<Habit> getHabits(String search, HabitFrequency frequency, org.springframework.data.domain.Pageable pageable) {
+        return habitTrackerRepo.searchHabits(search, frequency, pageable);
     }
 
     public Habit getHabitById(Long id) {
@@ -117,9 +142,11 @@ public class HabitService {
             );
         }
 
-        if (completionLogRepo
-                .findByHabitAndCompletionDate(habit, date)
-                .isPresent()) {
+        if (!completionLogRepo
+            .findByHabitAndCompletionDate(habit, date)
+            .isEmpty()) {
+
+            habitReminderService.resolveReminder(habit, date);
 
             throw new IllegalArgumentException(
                     "Habit is already completed for this date"
@@ -132,24 +159,16 @@ public class HabitService {
         CompletionLog savedLog =
                 completionLogRepo.save(log);
 
-        habit.setCompletedToday(date.equals(LocalDate.now()));
+        habitReminderService.resolveReminder(habit, date);
+        habit.setCompletedToday(date.equals(LocalDate.now(zoneId)));
         habitTrackerRepo.save(habit);
         updateStreak(habit);
 
         return savedLog;
     }
 
-    public Streak getStreak(Long habitId) {
-
-        Habit habit = getHabitById(habitId);
-
-        return streakRepo.findByHabit(habit)
-                .orElseGet(() -> {
-
-                    Streak streak = new Streak(habit);
-
-                    return streakRepo.save(streak);
-                });
+    public Habit getHabitStreak(Long habitId) {
+        return getHabitById(habitId);
     }
 
     public List<CompletionLog> getCompletionLogs(Long habitId) {
@@ -227,35 +246,17 @@ public class HabitService {
     }
 
     private void updateStreak(Habit habit) {
+        List<CompletionLog> logs = completionLogRepo.findByHabitOrderByCompletionDateAsc(habit);
+        int currentStreak = calculateCurrentStreak(habit, logs);
+        int bestStreak = calculateBestStreak(habit, logs);
 
-        List<CompletionLog> logs =
-                completionLogRepo
-                        .findByHabitOrderByCompletionDateAsc(habit);
-
-        int currentStreak =
-                calculateCurrentStreak(habit, logs);
-
-        int bestStreak =
-                calculateBestStreak(habit, logs);
-
-        Streak streak =
-                streakRepo.findByHabit(habit)
-                        .orElse(new Streak(habit));
-
-        streak.setCurrentStreak(currentStreak);
         habit.setCurrentStreak(currentStreak);
-
-        if (currentStreak > streak.getBestStreak()) {
-            streak.setBestStreak(currentStreak);
+        if (currentStreak > habit.getBestStreak()) {
+            habit.setBestStreak(currentStreak);
         }
-
-        if (bestStreak > streak.getBestStreak()) {
-            streak.setBestStreak(bestStreak);
+        if (bestStreak > habit.getBestStreak()) {
+            habit.setBestStreak(bestStreak);
         }
-
-        habit.setBestStreak(streak.getBestStreak());
-
-        streakRepo.save(streak);
         habitTrackerRepo.save(habit);
     }
 
